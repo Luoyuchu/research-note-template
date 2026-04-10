@@ -133,6 +133,23 @@ export function resolveVaultTarget(noteRelativePath, rawTarget) {
   return normalizeRelativePath(path.posix.join(path.posix.dirname(noteRelativePath), cleanTarget));
 }
 
+function resolveAssetRemoteUrl(noteRelativePath, rawTarget, assetUrlByLocalPath) {
+  const resolvedTarget = resolveVaultTarget(noteRelativePath, rawTarget);
+  if (resolvedTarget) {
+    const remoteUrl = assetUrlByLocalPath.get(resolvedTarget);
+    if (remoteUrl) {
+      return remoteUrl;
+    }
+  }
+
+  const normalizedTarget = normalizeRelativePath(rawTarget.replace(/^\/+/, ""));
+  if (!normalizedTarget) {
+    return null;
+  }
+
+  return assetUrlByLocalPath.get(normalizedTarget) ?? null;
+}
+
 function splitMarkdownTarget(rawTargetSegment) {
   const trimmed = rawTargetSegment.trim();
   if (!trimmed) {
@@ -177,12 +194,7 @@ export function rewriteMarkdownAssetLinks(markdown, noteRelativePath, assetUrlBy
 
   const rewrittenMarkdown = markdown.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (fullMatch, altText, rawTargetSegment) => {
     const { target, trailing } = splitMarkdownTarget(rawTargetSegment);
-    const resolvedTarget = resolveVaultTarget(noteRelativePath, target);
-    if (!resolvedTarget) {
-      return fullMatch;
-    }
-
-    const remoteUrl = assetUrlByLocalPath.get(resolvedTarget);
+    const remoteUrl = resolveAssetRemoteUrl(noteRelativePath, target, assetUrlByLocalPath);
     if (!remoteUrl) {
       return fullMatch;
     }
@@ -194,12 +206,7 @@ export function rewriteMarkdownAssetLinks(markdown, noteRelativePath, assetUrlBy
 
   const finalMarkdown = rewrittenMarkdown.replace(/!\[\[([^\]]+)\]\]/g, (fullMatch, inner) => {
     const [targetPart, labelPart] = inner.split("|", 2);
-    const resolvedTarget = resolveVaultTarget(noteRelativePath, targetPart);
-    if (!resolvedTarget) {
-      return fullMatch;
-    }
-
-    const remoteUrl = assetUrlByLocalPath.get(resolvedTarget);
+    const remoteUrl = resolveAssetRemoteUrl(noteRelativePath, targetPart, assetUrlByLocalPath);
     if (!remoteUrl) {
       return fullMatch;
     }

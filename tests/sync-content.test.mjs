@@ -54,6 +54,24 @@ test("rewriteMarkdownAssetLinks rewrites simple wiki embeds", () => {
   assert.equal(rewritten.replacedCount, 1);
 });
 
+test("rewriteMarkdownAssetLinks supports vault-root style wiki embeds emitted by the asset plugin", () => {
+  const assetMap = new Map([["image_assets/2026/04/abc.png", "https://cdn.example.com/2026/04/abc.webp"]]);
+  const markdown = "![[image_assets/2026/04/abc.png]]";
+  const rewritten = rewriteMarkdownAssetLinks(markdown, "01_Daily_Logs/2026-04-05.md", assetMap);
+
+  assert.equal(rewritten.markdown, "![](https://cdn.example.com/2026/04/abc.webp)");
+  assert.equal(rewritten.replacedCount, 1);
+});
+
+test("rewriteMarkdownAssetLinks supports vault-root style markdown image links emitted by the asset plugin", () => {
+  const assetMap = new Map([["image_assets/2026/04/abc.png", "https://cdn.example.com/2026/04/abc.webp"]]);
+  const markdown = "![Screenshot](image_assets/2026/04/abc.png)";
+  const rewritten = rewriteMarkdownAssetLinks(markdown, "01_Daily_Logs/2026-04-05.md", assetMap);
+
+  assert.equal(rewritten.markdown, "![Screenshot](https://cdn.example.com/2026/04/abc.webp)");
+  assert.equal(rewritten.replacedCount, 1);
+});
+
 test("loadAssetUrlMap prefers remoteUrl from registry records", async () => {
   const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "asset-registry-test-"));
   const assetDir = path.join(tempRoot, "assets", "2026", "04");
