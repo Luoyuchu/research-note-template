@@ -12,7 +12,7 @@
 
 ## Start Here
 
-- 先看一个示例项目页：[[02_Projects/[Prj] Visual Reasoning Lab|Visual Reasoning Lab]]
+- 先看一个示例项目页：[[02_Projects/Prj Visual Reasoning Lab|Visual Reasoning Lab]]
 
 ## Common Moves
 

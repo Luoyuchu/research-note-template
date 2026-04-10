@@ -10,8 +10,8 @@
 
 ## Start Here
 
-- 理论示例：[[03_Knowledge/Theory/[Th] Visual Abstraction|Visual Abstraction]]
-- 主题示例：[[03_Knowledge/Topics/[Top] Visual Reasoning|Visual Reasoning]]
+- 理论示例：[[03_Knowledge/Theory/Th Visual Abstraction|Visual Abstraction]]
+- 主题示例：[[03_Knowledge/Topics/Top Visual Reasoning|Visual Reasoning]]
 
 ## Common Moves
 

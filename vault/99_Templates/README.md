@@ -24,3 +24,12 @@
 ## Rule Of Thumb
 
 如果一个模板连续几次都只用到一半，说明它对你来说太重了，应该继续删简。
+
+## Filename Note
+
+如果一篇笔记将来要发布到 Quartz 站点，文件名尽量保持简单。
+
+- 推荐：`Prj Visual Reasoning Lab.md`
+- 避免：`[Prj] Visual Reasoning Lab.md`
+
+不要把 `[` `]` `#` `|` 放进文件名。需要展示得更自然时，优先改 frontmatter 里的 `title`。

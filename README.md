@@ -96,6 +96,21 @@ npm run build
 
 `Project` 不应该直接承担完整写作稿件，`Writing` 也不应该复制 `Project` 的整个结构。
 
+## Naming Rule
+
+为了兼容 Quartz 的 wikilink 渲染，文件名尽量只用普通字符。
+
+- 推荐：`Prj Visual Reasoning Lab.md`
+- 不推荐：`[Prj] Visual Reasoning Lab.md`
+
+特别是文件名里不要放：
+
+- `[` `]`
+- `#`
+- `|`
+
+原因不是 Obsidian 不能用，而是这些字符同时也是 Quartz wikilink 语法的一部分，容易导致站点正文中的 `[[...]]` 无法正确渲染成链接。
+
 如果你想本地预览：
 
 ```bash

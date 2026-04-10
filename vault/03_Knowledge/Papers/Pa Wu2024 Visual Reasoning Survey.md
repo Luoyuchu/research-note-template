@@ -16,7 +16,6 @@ tags:
 
 ## Connected Notes
 
-- 项目页：[[02_Projects/[Prj] Visual Reasoning Lab|Visual Reasoning Lab]]
-- 理论页：[[03_Knowledge/Theory/[Th] Visual Abstraction|Visual Abstraction]]
+- 项目页：[[02_Projects/Prj Visual Reasoning Lab|Visual Reasoning Lab]]
+- 理论页：[[03_Knowledge/Theory/Th Visual Abstraction|Visual Abstraction]]
 - 当日日志：[[01_Daily_Logs/2026-04-05|2026-04-05]]
-

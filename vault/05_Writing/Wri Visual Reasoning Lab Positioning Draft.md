@@ -24,9 +24,9 @@ status: drafting
 
 ## Evidence To Pull
 
-- Project: [[02_Projects/[Prj] Visual Reasoning Lab|Visual Reasoning Lab]]
-- Theory: [[03_Knowledge/Theory/[Th] Visual Abstraction|Visual Abstraction]]
-- Papers: [[03_Knowledge/Papers/[Pa] Wu2024 Visual Reasoning Survey|Wu2024 Visual Reasoning Survey]]
+- Project: [[02_Projects/Prj Visual Reasoning Lab|Visual Reasoning Lab]]
+- Theory: [[03_Knowledge/Theory/Th Visual Abstraction|Visual Abstraction]]
+- Papers: [[03_Knowledge/Papers/Pa Wu2024 Visual Reasoning Survey|Wu2024 Visual Reasoning Survey]]
 - Raw materials: [[04_Resources/AI_Raw/AI_Layout_Debug_Conversation|AI Layout Debug Conversation]]
 
 ## Draft Notes
@@ -37,4 +37,3 @@ status: drafting
 ## Revision Log
 
 - 2026-04-05: 从项目讨论中抽出第一版定位问题。
-

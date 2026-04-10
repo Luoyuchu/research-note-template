@@ -77,15 +77,26 @@
 
 ## Naming Guidance
 
-对高频重复概念，建议使用前缀避免重名：
+对高频重复概念，建议使用前缀避免重名，但前缀直接写成普通文本，不要放进方括号。
 
-- `[Prj] ...`
-- `[Wri] ...`
-- `[Th] ...`
-- `[Pa] ...`
-- `[Top] ...`
+- `Prj ...`
+- `Wri ...`
+- `Th ...`
+- `Pa ...`
+- `Top ...`
 
 这不是为了好看，而是为了在 `[[` 自动补全时更快定位。
+
+Quartz 兼容性约束：
+
+- 文件名不要使用 `[` `]`
+- 文件名不要使用 `#` 或 `|`
+- 页面展示名称放在 frontmatter `title` 里，而不是靠特殊符号拼文件名
+
+例如：
+
+- 推荐：`Prj Visual Reasoning Lab.md`
+- 不推荐：`[Prj] Visual Reasoning Lab.md`
 
 ## Practical Rule
 

@@ -14,9 +14,9 @@ tags:
 ## 入口
 
 - [[01_Daily_Logs/2026-04-05|Daily Logs]]
-- [[02_Projects/[Prj] Visual Reasoning Lab|Projects]]
-- [[03_Knowledge/Topics/[Top] Visual Reasoning|Knowledge]]
-- [[05_Writing/[Wri] Visual Reasoning Lab Positioning Draft|Writing]]
+- [[02_Projects/Prj Visual Reasoning Lab|Projects]]
+- [[03_Knowledge/Topics/Top Visual Reasoning|Knowledge]]
+- [[05_Writing/Wri Visual Reasoning Lab Positioning Draft|Writing]]
 - [[04_Resources/README|Resources]]
 
 ## Folder Guides
@@ -55,3 +55,4 @@ tags:
 - 重要内容再沉淀到项目页、知识页或写作页。
 - 图片在本地写作时保持本地链接。
 - 发布时再根据 `.asset-registry/` 把本地图片路径替换成远端 URL。
+- 文件名避免使用 `[` `]` `#` `|`，以免 Quartz 无法正确渲染 wikilink。

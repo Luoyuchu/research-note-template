@@ -22,13 +22,13 @@ status: active
 
 ## Current Focus
 
-- 研究视觉抽象与推理链路的关系：[[03_Knowledge/Theory/[Th] Visual Abstraction|Visual Abstraction]]
+- 研究视觉抽象与推理链路的关系：[[03_Knowledge/Theory/Th Visual Abstraction|Visual Abstraction]]
 - 跟踪最近的工作记录：[[01_Daily_Logs/2026-04-05|2026-04-05]]
-- 对照综述笔记：[[03_Knowledge/Papers/[Pa] Wu2024 Visual Reasoning Survey|Wu2024 Visual Reasoning Survey]]
+- 对照综述笔记：[[03_Knowledge/Papers/Pa Wu2024 Visual Reasoning Survey|Wu2024 Visual Reasoning Survey]]
 
 ## Related Deliverables
 
-- 项目定位草稿：[[05_Writing/[Wri] Visual Reasoning Lab Positioning Draft|Visual Reasoning Lab Positioning Draft]]
+- 项目定位草稿：[[05_Writing/Wri Visual Reasoning Lab Positioning Draft|Visual Reasoning Lab Positioning Draft]]
 
 ## How This Page Stays Readable
 

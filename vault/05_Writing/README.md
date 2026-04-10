@@ -11,7 +11,7 @@
 
 ## Start Here
 
-- 先看一个示例写作页：[[05_Writing/[Wri] Visual Reasoning Lab Positioning Draft|Positioning Draft]]
+- 先看一个示例写作页：[[05_Writing/Wri Visual Reasoning Lab Positioning Draft|Positioning Draft]]
 
 ## Common Moves
 

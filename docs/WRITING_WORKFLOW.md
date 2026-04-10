@@ -18,10 +18,10 @@
 
 例如：
 
-- `[[02_Projects/[Prj] Visual Reasoning Lab]]`
-- `[[05_Writing/[Wri] Visual Reasoning Lab Positioning Draft]]`
-- `[[03_Knowledge/Theory/[Th] Visual Abstraction]]`
-- `[[03_Knowledge/Papers/[Pa] Wu2024 Visual Reasoning Survey]]`
+- `[[02_Projects/Prj Visual Reasoning Lab]]`
+- `[[05_Writing/Wri Visual Reasoning Lab Positioning Draft]]`
+- `[[03_Knowledge/Theory/Th Visual Abstraction]]`
+- `[[03_Knowledge/Papers/Pa Wu2024 Visual Reasoning Survey]]`
 
 这样就足够了。
 

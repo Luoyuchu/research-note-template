@@ -18,6 +18,5 @@ tags:
 
 ## Linked Context
 
-- 项目页：[[02_Projects/[Prj] Visual Reasoning Lab|Visual Reasoning Lab]]
+- 项目页：[[02_Projects/Prj Visual Reasoning Lab|Visual Reasoning Lab]]
 - 日记页：[[01_Daily_Logs/2026-04-05|2026-04-05]]
-
