@@ -46,6 +46,13 @@ Vercel 真正要做的是：
 - `STATICRYPT_REMEMBER_DAYS`
   - 可选，记住密码的有效天数，默认 `0`
 
+如果你的 registry 里记录的是上传 API 地址，而不是公开图片域名，请再配置：
+
+- `PUBLIC_ASSET_BASE_URL`
+  - 例如 `https://vis-wiki-image-bed.luoyuchu.org`
+  - 构建时会用它替换 registry `remoteUrl` 的 host
+  - 路径与后缀仍然取自 registry 中真实上传结果
+
 ## Build Behavior
 
 构建过程如下：

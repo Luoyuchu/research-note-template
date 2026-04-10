@@ -79,7 +79,35 @@ function shouldSkipSourceName(name) {
   return name.startsWith(".") || SKIPPED_SOURCE_NAMES.has(name);
 }
 
-export async function loadAssetUrlMap(registryRoot) {
+function normalizeBaseUrl(value) {
+  return value.replace(/\/+$/, "");
+}
+
+export function resolvePublishedAssetUrl(record, publicAssetBaseUrl) {
+  if (!shouldUseRegistryRecord(record)) {
+    return null;
+  }
+
+  if (!publicAssetBaseUrl) {
+    return record.remoteUrl;
+  }
+
+  try {
+    const remoteUrl = new URL(record.remoteUrl);
+    const baseUrl = new URL(`${normalizeBaseUrl(publicAssetBaseUrl)}/`);
+    const pathname = remoteUrl.pathname.replace(/^\/+/, "");
+    if (!pathname) {
+      return record.remoteUrl;
+    }
+
+    return new URL(pathname, baseUrl).toString();
+  } catch {
+    return record.remoteUrl;
+  }
+}
+
+export async function loadAssetUrlMap(registryRoot, options = {}) {
+  const { publicAssetBaseUrl = "" } = options;
   const assetRoot = path.join(registryRoot, ...REGISTRY_ASSET_ROOT);
   const map = new Map();
 
@@ -103,7 +131,12 @@ export async function loadAssetUrlMap(registryRoot) {
       continue;
     }
 
-    map.set(normalizeRelativePath(record.localPath), record.remoteUrl);
+    const publishedUrl = resolvePublishedAssetUrl(record, publicAssetBaseUrl);
+    if (!publishedUrl) {
+      continue;
+    }
+
+    map.set(normalizeRelativePath(record.localPath), publishedUrl);
   }
 
   return map;
@@ -280,7 +313,9 @@ export async function syncVaultToSite(repoRoot) {
   const vaultRoot = config.vaultDir ? path.join(repoRoot, config.vaultDir) : repoRoot;
   const siteContentDir = path.join(repoRoot, config.siteContentDir);
   const registryDir = path.join(vaultRoot, config.registryDir);
-  const assetUrlByLocalPath = await loadAssetUrlMap(registryDir);
+  const assetUrlByLocalPath = await loadAssetUrlMap(registryDir, {
+    publicAssetBaseUrl: process.env.PUBLIC_ASSET_BASE_URL ?? ""
+  });
 
   await ensureCleanDirectory(siteContentDir);
   await fs.writeFile(path.join(siteContentDir, ".gitkeep"), "", "utf8");

@@ -23,7 +23,11 @@ tags:
 
 如果 PicList 最终把图片转换成了 WebP，也不要试图反向改写本地文件后缀。
 
-发布时应优先信任 registry 中记录的 `remoteUrl`。
+如果 registry 中的 `remoteUrl` 指向的是 R2 S3 API 域名，而不是公开读域名：
+
+- 继续信任它的对象路径与后缀
+- 不直接信任它的 host
+- 在构建时通过 `PUBLIC_ASSET_BASE_URL` 替换成真正的公开图片域名
 
 ## Why This Lives In Knowledge
 

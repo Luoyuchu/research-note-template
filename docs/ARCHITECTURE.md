@@ -29,7 +29,7 @@
 2. 同步脚本读取 `publish.config.json`
 3. 只有 `vault/` 中白名单内容被复制到 `.site/content/`
 4. 同步脚本读取 `vault/.asset-registry/assets/**/*.json`
-5. 把 Markdown 中的本地图片链接替换成 registry 中的 `remoteUrl`
+5. 把 Markdown 中的本地图片链接替换成最终发布 URL
 6. Quartz 从 `.site/content/` 渲染最终站点
 
 ## Why Vault Subdirectory + Hidden Site
@@ -60,7 +60,31 @@ Vercel 仍然可以做的事情只有：
 
 这正是这个模板里的同步脚本所做的工作。
 
-## Why Prefer `remoteUrl` Instead Of Path Guessing
+## Public Asset Base URL
+
+有些上传工具会把 R2 的 S3 API 地址写进 registry，例如：
+
+- `https://<account>.r2.cloudflarestorage.com/...`
+
+这类地址适合上传接口或 API 访问，但不一定适合作为静态站图片的公开读地址。
+
+因此模板支持一个可选环境变量：
+
+- `PUBLIC_ASSET_BASE_URL`
+
+设置后，同步脚本会：
+
+1. 读取 registry 中的 `remoteUrl`
+2. 保留其中真实对象路径和后缀
+3. 把 host 部分替换成你的公开图片域名
+
+例如：
+
+- registry: `https://<account>.r2.cloudflarestorage.com/2026/04/example.webp`
+- env: `PUBLIC_ASSET_BASE_URL=https://vis-wiki-image-bed.luoyuchu.org`
+- publish: `https://vis-wiki-image-bed.luoyuchu.org/2026/04/example.webp`
+
+## Why Not Only Use `desiredRemotePath`
 
 PicList 或后端图床可能发生：
 
@@ -71,7 +95,8 @@ PicList 或后端图床可能发生：
 因此：
 
 - `desiredRemotePath` 只是期望值
-- `remoteUrl` 才是发布时可信的事实结果
+- `remoteUrl` 的路径部分才是更接近发布事实的结果
+- 如果上传 host 和公开 host 不同，则通过 `PUBLIC_ASSET_BASE_URL` 做 host 重写
 
 ## Scope Boundary
 

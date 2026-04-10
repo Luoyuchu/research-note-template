@@ -7,6 +7,7 @@ import { promises as fs } from "node:fs";
 import {
   isPublishedPath,
   loadAssetUrlMap,
+  resolvePublishedAssetUrl,
   resolveVaultTarget,
   rewriteMarkdownAssetLinks,
   syncVaultToSite
@@ -108,6 +109,48 @@ test("loadAssetUrlMap prefers remoteUrl from registry records", async () => {
   const map = await loadAssetUrlMap(tempRoot);
   assert.equal(map.get("image_assets/2026/04/abc123.png"), "https://cdn.example.com/2026/04/abc123.webp");
   assert.equal(map.has("image_assets/2026/04/deleted.png"), false);
+});
+
+test("resolvePublishedAssetUrl can rebase registry URLs onto a public asset domain", () => {
+  const publishedUrl = resolvePublishedAssetUrl(
+    {
+      localPath: "image_assets/2026/04/abc123.png",
+      remoteUrl: "https://1234567890.r2.cloudflarestorage.com/2026/04/abc123.webp",
+      status: "uploaded"
+    },
+    "https://vis-wiki-image-bed.luoyuchu.org"
+  );
+
+  assert.equal(publishedUrl, "https://vis-wiki-image-bed.luoyuchu.org/2026/04/abc123.webp");
+});
+
+test("loadAssetUrlMap can use a public asset base URL instead of the upload API host", async () => {
+  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "asset-registry-public-base-"));
+  const assetDir = path.join(tempRoot, "assets", "2026", "04");
+  await fs.mkdir(assetDir, { recursive: true });
+
+  await fs.writeFile(
+    path.join(assetDir, "abc123.json"),
+    JSON.stringify(
+      {
+        localPath: "image_assets/2026/04/abc123.png",
+        remoteUrl: "https://1234567890.r2.cloudflarestorage.com/2026/04/abc123.webp",
+        status: "uploaded"
+      },
+      null,
+      2
+    ),
+    "utf8"
+  );
+
+  const map = await loadAssetUrlMap(tempRoot, {
+    publicAssetBaseUrl: "https://vis-wiki-image-bed.luoyuchu.org"
+  });
+
+  assert.equal(
+    map.get("image_assets/2026/04/abc123.png"),
+    "https://vis-wiki-image-bed.luoyuchu.org/2026/04/abc123.webp"
+  );
 });
 
 test("syncVaultToSite reads authored notes from vaultDir without adding the folder to published paths", async () => {

@@ -111,6 +111,21 @@ npm run build
 
 原因不是 Obsidian 不能用，而是这些字符同时也是 Quartz wikilink 语法的一部分，容易导致站点正文中的 `[[...]]` 无法正确渲染成链接。
 
+## Public Asset URL
+
+如果你的本地上传工具写进 registry 的 `remoteUrl` 是 R2 S3 API 地址，而不是公开读地址，可以在构建时设置：
+
+- `PUBLIC_ASSET_BASE_URL=https://vis-wiki-image-bed.luoyuchu.org`
+
+模板会保留 registry 里 `remoteUrl` 的路径部分，例如 `/2026/04/example.webp`，并在发布时改写为：
+
+- `https://vis-wiki-image-bed.luoyuchu.org/2026/04/example.webp`
+
+这适合：
+
+- 上传接口走 `r2.cloudflarestorage.com`
+- 公开访问走自定义域名或 `r2.dev`
+
 如果你想本地预览：
 
 ```bash
