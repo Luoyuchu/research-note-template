@@ -1,0 +1,8 @@
+{
+  "localAssetsPrefix": "image_assets",
+  "localPathRule": "{year}/{month}/{md5}.{extName}",
+  "pluginId": "obsidian-asset-relay",
+  "remoteBaseUrl": "",
+  "remotePathRule": "{year}/{month}/{md5}.{extName}",
+  "schemaVersion": 2
+}

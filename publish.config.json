@@ -1,0 +1,19 @@
+{
+  "vaultDir": "vault",
+  "siteDir": ".site",
+  "siteContentDir": ".site/content",
+  "registryDir": ".asset-registry",
+  "publish": {
+    "includeTopLevel": [
+      "index.md",
+      "01_Daily_Logs",
+      "02_Projects",
+      "03_Knowledge",
+      "04_Resources",
+      "05_Writing"
+    ],
+    "excludePaths": [
+      "04_Resources/AI_Raw"
+    ]
+  }
+}

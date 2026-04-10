@@ -1,0 +1,7 @@
+{
+  "folder": "01_Daily_Logs",
+  "format": "YYYY-MM-DD",
+  "template": "99_Templates/Daily Log Template.md",
+  "autorun": false
+}
+

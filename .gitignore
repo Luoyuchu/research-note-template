@@ -1,0 +1,17 @@
+.DS_Store
+node_modules/
+
+vault/.obsidian/cache
+vault/.obsidian/community-plugins.json
+vault/.obsidian/workspace.json
+vault/.obsidian/workspace-mobile.json
+vault/.obsidian/plugins/
+
+.site/node_modules/
+.site/public/
+.site/.quartz-cache/
+.site/content/**
+!.site/content/
+!.site/content/.gitkeep
+
+vault/image_assets/
