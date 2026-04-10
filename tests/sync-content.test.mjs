@@ -192,3 +192,41 @@ test("syncVaultToSite skips hidden files and system junk inside published folder
   await assert.rejects(fs.stat(path.join(tempRoot, ".site", "content", "04_Resources", ".DS_Store")));
   await assert.rejects(fs.stat(path.join(tempRoot, ".site", "content", "04_Resources", "Thumbs.db")));
 });
+
+test("syncVaultToSite preserves source file modification times for published notes", async () => {
+  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "vault-preserve-mtime-"));
+  const vaultRoot = path.join(tempRoot, "vault");
+  const knowledgeDir = path.join(vaultRoot, "03_Knowledge");
+  const sourceFile = path.join(knowledgeDir, "README.md");
+
+  await fs.mkdir(knowledgeDir, { recursive: true });
+
+  await fs.writeFile(
+    path.join(tempRoot, "publish.config.json"),
+    JSON.stringify(
+      {
+        vaultDir: "vault",
+        siteDir: ".site",
+        siteContentDir: ".site/content",
+        registryDir: ".asset-registry",
+        publish: {
+          includeTopLevel: ["03_Knowledge"],
+          excludePaths: []
+        }
+      },
+      null,
+      2
+    ),
+    "utf8"
+  );
+
+  await fs.writeFile(sourceFile, "# Knowledge\n", "utf8");
+
+  const expectedTime = new Date("2026-04-05T08:30:00.000Z");
+  await fs.utimes(sourceFile, expectedTime, expectedTime);
+
+  await syncVaultToSite(tempRoot);
+
+  const publishedStat = await fs.stat(path.join(tempRoot, ".site", "content", "03_Knowledge", "README.md"));
+  assert.equal(publishedStat.mtime.toISOString(), expectedTime.toISOString());
+});

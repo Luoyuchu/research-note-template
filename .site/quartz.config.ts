@@ -1,6 +1,16 @@
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
 
+function resolveBaseUrl() {
+  const raw =
+    process.env.SITE_BASE_URL ??
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ??
+    process.env.VERCEL_URL ??
+    "research-notes.example.com"
+
+  return raw.replace(/^https?:\/\//, "").replace(/\/+$/, "")
+}
+
 /**
  * Quartz 4 Configuration
  *
@@ -14,7 +24,7 @@ const config: QuartzConfig = {
     enablePopovers: true,
     analytics: null,
     locale: "zh-CN",
-    baseUrl: "research-notes.example.com",
+    baseUrl: resolveBaseUrl(),
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
@@ -55,7 +65,7 @@ const config: QuartzConfig = {
     transformers: [
       Plugin.FrontMatter(),
       Plugin.CreatedModifiedDate({
-        priority: ["frontmatter", "git", "filesystem"],
+        priority: ["frontmatter", "filesystem"],
       }),
       Plugin.SyntaxHighlighting({
         theme: {

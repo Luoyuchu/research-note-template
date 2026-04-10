@@ -219,6 +219,10 @@ async function ensureCleanDirectory(dirPath) {
   await fs.mkdir(dirPath, { recursive: true });
 }
 
+async function preserveFileTimes(destinationPath, sourceStat) {
+  await fs.utimes(destinationPath, sourceStat.atime, sourceStat.mtime);
+}
+
 async function copyIntoSiteContent(sourcePath, destinationPath, context, stats) {
   const stat = await fs.stat(sourcePath);
   if (shouldSkipSourceName(path.basename(sourcePath))) {
@@ -252,12 +256,14 @@ async function copyIntoSiteContent(sourcePath, destinationPath, context, stats) 
     const relativePath = normalizeRelativePath(path.relative(context.vaultRoot, sourcePath));
     const rewritten = rewriteMarkdownAssetLinks(sourceMarkdown, relativePath, context.assetUrlByLocalPath);
     await fs.writeFile(destinationPath, rewritten.markdown, "utf8");
+    await preserveFileTimes(destinationPath, stat);
     stats.copiedMarkdownFiles += 1;
     stats.rewrittenAssetLinks += rewritten.replacedCount;
     return;
   }
 
   await fs.copyFile(sourcePath, destinationPath);
+  await preserveFileTimes(destinationPath, stat);
   stats.copiedStaticFiles += 1;
 }
 

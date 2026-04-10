@@ -5,8 +5,8 @@
   "type": "module",
   "description": "Single-repo Obsidian vault template with Quartz publishing and Obsidian Asset Relay integration hooks.",
   "engines": {
-    "node": ">=22",
-    "npm": ">=10"
+    "node": "22.x",
+    "npm": "10.x"
   },
   "scripts": {
     "postinstall": "npm --prefix .site install",
