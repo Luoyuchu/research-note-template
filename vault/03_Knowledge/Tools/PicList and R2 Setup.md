@@ -9,7 +9,7 @@ tags:
 
 ## Goal
 
-图片不进 Git 仓库，本地编辑仍然看本地文件，发布时再使用远端 URL。
+图片不进 Git 仓库，本地编辑仍然看本地文件，发布时再使用最终发布 URL。
 
 ## Checklist
 
@@ -27,7 +27,7 @@ tags:
 
 - 继续信任它的对象路径与后缀
 - 不直接信任它的 host
-- 在构建时通过 `PUBLIC_ASSET_BASE_URL` 替换成真正的公开图片域名
+- 在构建时通过 `PUBLIC_ASSET_BASE_URL`，或 `vault/.asset-registry/config.json` 里的 `publicAssetBaseUrl`，替换成真正的公开图片域名
 
 ## Why This Lives In Knowledge
 

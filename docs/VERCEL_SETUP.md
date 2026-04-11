@@ -13,7 +13,7 @@ Vercel 真正要做的是：
 
 1. 拉取仓库代码
 2. 读取 `vault/.asset-registry/`
-3. 在构建前把 Markdown 里的本地图片路径替换成远端 URL
+3. 在构建前把 Markdown 里的本地图片路径替换成最终发布 URL
 4. 运行 Quartz 构建站点
 
 ## Recommended Project Settings
@@ -52,6 +52,17 @@ Vercel 真正要做的是：
   - 例如 `https://vis-wiki-image-bed.luoyuchu.org`
   - 构建时会用它替换 registry `remoteUrl` 的 host
   - 路径与后缀仍然取自 registry 中真实上传结果
+
+如果你不想把这个值只放在 Vercel env 中，也可以把默认公开域名写进：
+
+- `vault/.asset-registry/config.json`
+  - 字段：`publicAssetBaseUrl`
+
+优先级是：
+
+1. `PUBLIC_ASSET_BASE_URL`
+2. `vault/.asset-registry/config.json` 的 `publicAssetBaseUrl`
+3. registry 中原始 `remoteUrl`
 
 ## Build Behavior
 

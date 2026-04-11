@@ -55,7 +55,7 @@ Vercel 仍然可以做的事情只有：
 
 - 读取 Markdown
 - 读取 registry
-- 根据本地路径找到对应远端 URL
+- 根据本地路径找到对应最终发布 URL
 - 改写文本中的图片链接
 
 这正是这个模板里的同步脚本所做的工作。
@@ -72,7 +72,18 @@ Vercel 仍然可以做的事情只有：
 
 - `PUBLIC_ASSET_BASE_URL`
 
-设置后，同步脚本会：
+同时，插件也可以把一个默认公开域名写进：
+
+- `vault/.asset-registry/config.json`
+  - 字段名：`publicAssetBaseUrl`
+
+同步脚本会按下面的优先级决定最终公开域名：
+
+1. `PUBLIC_ASSET_BASE_URL`
+2. `vault/.asset-registry/config.json` 的 `publicAssetBaseUrl`
+3. 如果都没有，就直接使用 registry 里的 `remoteUrl`
+
+在发生 host 重写时，同步脚本会：
 
 1. 读取 registry 中的 `remoteUrl`
 2. 保留其中真实对象路径和后缀
@@ -96,7 +107,7 @@ PicList 或后端图床可能发生：
 
 - `desiredRemotePath` 只是期望值
 - `remoteUrl` 的路径部分才是更接近发布事实的结果
-- 如果上传 host 和公开 host 不同，则通过 `PUBLIC_ASSET_BASE_URL` 做 host 重写
+- 如果上传 host 和公开 host 不同，则通过 `PUBLIC_ASSET_BASE_URL` 或 registry config 里的 `publicAssetBaseUrl` 做 host 重写
 
 ## Scope Boundary
 

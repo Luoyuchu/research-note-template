@@ -7,7 +7,9 @@ import { promises as fs } from "node:fs";
 import {
   isPublishedPath,
   loadAssetUrlMap,
+  loadRegistryConfig,
   resolvePublishedAssetUrl,
+  resolvePublicAssetBaseUrl,
   resolveVaultTarget,
   rewriteMarkdownAssetLinks,
   syncVaultToSite
@@ -153,6 +155,50 @@ test("loadAssetUrlMap can use a public asset base URL instead of the upload API 
   );
 });
 
+test("loadRegistryConfig reads optional public asset base settings from the registry config file", async () => {
+  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "asset-registry-config-"));
+  await fs.writeFile(
+    path.join(tempRoot, "config.json"),
+    JSON.stringify(
+      {
+        pluginId: "obsidian-asset-relay",
+        publicAssetBaseUrl: "https://cdn-public.example.com",
+        remoteBaseUrl: "https://upload-api.example.com",
+        schemaVersion: 2
+      },
+      null,
+      2
+    ),
+    "utf8"
+  );
+
+  const config = await loadRegistryConfig(tempRoot);
+  assert.equal(config.publicAssetBaseUrl, "https://cdn-public.example.com");
+  assert.equal(config.remoteBaseUrl, "https://upload-api.example.com");
+});
+
+test("resolvePublicAssetBaseUrl prefers env override and otherwise uses registry config", () => {
+  assert.equal(
+    resolvePublicAssetBaseUrl({
+      envPublicAssetBaseUrl: "https://env.example.com",
+      registryConfig: {
+        publicAssetBaseUrl: "https://registry.example.com"
+      }
+    }),
+    "https://env.example.com"
+  );
+
+  assert.equal(
+    resolvePublicAssetBaseUrl({
+      envPublicAssetBaseUrl: "",
+      registryConfig: {
+        publicAssetBaseUrl: "https://registry.example.com"
+      }
+    }),
+    "https://registry.example.com"
+  );
+});
+
 test("syncVaultToSite reads authored notes from vaultDir without adding the folder to published paths", async () => {
   const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "vault-subdir-sync-"));
   const vaultRoot = path.join(tempRoot, "vault");
@@ -210,6 +256,80 @@ test("syncVaultToSite reads authored notes from vaultDir without adding the fold
 
   await assert.rejects(fs.stat(path.join(tempRoot, ".site", "content", "vault")));
   assert.equal(publishedDailyLog, "![Screenshot](https://cdn.example.com/2026/04/abc.webp)\n");
+});
+
+test("syncVaultToSite can use publicAssetBaseUrl from registry config when env override is absent", async () => {
+  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "vault-public-base-from-registry-"));
+  const vaultRoot = path.join(tempRoot, "vault");
+  const dailyLogDir = path.join(vaultRoot, "01_Daily_Logs");
+  const registryRoot = path.join(vaultRoot, ".asset-registry");
+  const registryDir = path.join(registryRoot, "assets", "2026", "04");
+
+  await fs.mkdir(dailyLogDir, { recursive: true });
+  await fs.mkdir(registryDir, { recursive: true });
+
+  await fs.writeFile(
+    path.join(tempRoot, "publish.config.json"),
+    JSON.stringify(
+      {
+        vaultDir: "vault",
+        siteDir: ".site",
+        siteContentDir: ".site/content",
+        registryDir: ".asset-registry",
+        publish: {
+          includeTopLevel: ["01_Daily_Logs"],
+          excludePaths: []
+        }
+      },
+      null,
+      2
+    ),
+    "utf8"
+  );
+
+  await fs.writeFile(
+    path.join(registryRoot, "config.json"),
+    JSON.stringify(
+      {
+        pluginId: "obsidian-asset-relay",
+        publicAssetBaseUrl: "https://cdn-public.example.com",
+        remoteBaseUrl: "https://upload-api.example.com",
+        schemaVersion: 2
+      },
+      null,
+      2
+    ),
+    "utf8"
+  );
+
+  await fs.writeFile(
+    path.join(dailyLogDir, "2026-04-05.md"),
+    "![Screenshot](../image_assets/2026/04/abc.png)\n",
+    "utf8"
+  );
+
+  await fs.writeFile(
+    path.join(registryDir, "abc.json"),
+    JSON.stringify(
+      {
+        localPath: "image_assets/2026/04/abc.png",
+        remoteUrl: "https://upload-api.example.com/2026/04/abc.webp",
+        status: "uploaded"
+      },
+      null,
+      2
+    ),
+    "utf8"
+  );
+
+  await syncVaultToSite(tempRoot);
+
+  const publishedDailyLog = await fs.readFile(
+    path.join(tempRoot, ".site", "content", "01_Daily_Logs", "2026-04-05.md"),
+    "utf8"
+  );
+
+  assert.equal(publishedDailyLog, "![Screenshot](https://cdn-public.example.com/2026/04/abc.webp)\n");
 });
 
 test("syncVaultToSite skips hidden files and system junk inside published folders", async () => {

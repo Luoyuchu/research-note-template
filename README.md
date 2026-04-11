@@ -82,7 +82,7 @@ npm run build
 构建前脚本会先做两件事：
 
 1. 从 `vault/` 中拷贝可发布内容到 `.site/content/`
-2. 根据 `vault/.asset-registry/` 把本地图片路径替换成远端 `remoteUrl`
+2. 根据 `vault/.asset-registry/` 中的上传结果和公开发布配置，把本地图片路径替换成最终发布 URL
 
 ## Structure Principle
 
@@ -113,11 +113,29 @@ npm run build
 
 ## Public Asset URL
 
-如果你的本地上传工具写进 registry 的 `remoteUrl` 是 R2 S3 API 地址，而不是公开读地址，可以在构建时设置：
+这里要区分两个概念：
 
-- `PUBLIC_ASSET_BASE_URL=https://vis-wiki-image-bed.luoyuchu.org`
+- `remoteUrl`
+  - 上传工具或 PicList 返回的原始资产 URL
+  - 它更接近“上传结果”或“操作用 URL”
+  - 不一定是最终公开读地址
+- 最终发布 URL
+  - 构建时真正写进站点 HTML 的公开图片地址
 
-模板会保留 registry 里 `remoteUrl` 的路径部分，例如 `/2026/04/example.webp`，并在发布时改写为：
+如果你的 registry 里记录的 `remoteUrl` 不是公开读地址，模板支持两种方式提供公开图片域名：
+
+- 在 Vercel 或本地构建环境里设置：
+  - `PUBLIC_ASSET_BASE_URL=https://vis-wiki-image-bed.luoyuchu.org`
+- 或者把它写进：
+  - `vault/.asset-registry/config.json` 的 `publicAssetBaseUrl`
+
+模板会按下面的优先级确定公开图片域名：
+
+1. `PUBLIC_ASSET_BASE_URL`
+2. `vault/.asset-registry/config.json` 里的 `publicAssetBaseUrl`
+3. 如果前两者都没有，再直接使用 `remoteUrl`
+
+发布时会保留 registry 里 `remoteUrl` 的路径部分，例如 `/2026/04/example.webp`，并把 host 改写为：
 
 - `https://vis-wiki-image-bed.luoyuchu.org/2026/04/example.webp`
 
@@ -157,7 +175,7 @@ PicList 可能会在上传时转换格式，例如：
 
 因此发布时不能只靠本地文件名推导最终 URL。
 
-这个模板的同步脚本会优先读取 `vault/.asset-registry/` 中的 `remoteUrl`，而不是假设远端后缀与本地一致。
+这个模板的同步脚本会优先读取 `vault/.asset-registry/` 中 `remoteUrl` 的真实路径与后缀，而不是假设远端后缀与本地一致。
 
 ## 可选的密码保护
 

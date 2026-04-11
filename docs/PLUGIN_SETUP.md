@@ -15,7 +15,7 @@
 模板仓库负责：
 
 - 在发布前读取 registry
-- 把本地链接改写为远端 URL
+- 把本地链接改写为最终发布 URL
 
 ## Recommended Setup Order
 

@@ -98,7 +98,7 @@
 发布阶段：
 
 - 同步脚本读取 registry
-- 自动把本地图片链接替换成远端 `remoteUrl`
+- 自动把本地图片链接替换成最终发布 URL
 
 ## Why This Workflow Works
 

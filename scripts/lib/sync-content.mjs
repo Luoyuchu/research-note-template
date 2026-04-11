@@ -19,6 +19,10 @@ export async function loadJson(filePath) {
   return JSON.parse(raw);
 }
 
+function readOptionalString(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 export async function loadPublishConfig(configPath) {
   const config = await loadJson(configPath);
   return {
@@ -31,6 +35,32 @@ export async function loadPublishConfig(configPath) {
       excludePaths: [...(config.publish?.excludePaths ?? [])].map(normalizeRelativePath)
     }
   };
+}
+
+export async function loadRegistryConfig(registryRoot) {
+  const configPath = path.join(registryRoot, "config.json");
+
+  try {
+    const config = await loadJson(configPath);
+    return {
+      publicAssetBaseUrl: readOptionalString(config.publicAssetBaseUrl),
+      remoteBaseUrl: readOptionalString(config.remoteBaseUrl)
+    };
+  } catch {
+    return {
+      publicAssetBaseUrl: "",
+      remoteBaseUrl: ""
+    };
+  }
+}
+
+export function resolvePublicAssetBaseUrl(options = {}) {
+  const envPublicAssetBaseUrl = readOptionalString(options.envPublicAssetBaseUrl);
+  if (envPublicAssetBaseUrl) {
+    return envPublicAssetBaseUrl;
+  }
+
+  return readOptionalString(options.registryConfig?.publicAssetBaseUrl);
 }
 
 export function isPublishedPath(relativePath, publishConfig) {
@@ -313,8 +343,13 @@ export async function syncVaultToSite(repoRoot) {
   const vaultRoot = config.vaultDir ? path.join(repoRoot, config.vaultDir) : repoRoot;
   const siteContentDir = path.join(repoRoot, config.siteContentDir);
   const registryDir = path.join(vaultRoot, config.registryDir);
+  const registryConfig = await loadRegistryConfig(registryDir);
+  const publicAssetBaseUrl = resolvePublicAssetBaseUrl({
+    envPublicAssetBaseUrl: process.env.PUBLIC_ASSET_BASE_URL ?? "",
+    registryConfig
+  });
   const assetUrlByLocalPath = await loadAssetUrlMap(registryDir, {
-    publicAssetBaseUrl: process.env.PUBLIC_ASSET_BASE_URL ?? ""
+    publicAssetBaseUrl
   });
 
   await ensureCleanDirectory(siteContentDir);
